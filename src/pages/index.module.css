@@ -8,6 +8,32 @@
   padding: 0 0.5rem;
 }
 
+
+.board{
+  display: flex;
+  flex-wrap: wrap;
+  width: 640px;
+  height: 640px;
+  background: green;
+  font-size: 0;
+}
+
+.cell{
+  width: 80px;
+  height: 80px;
+  border: solid 1px black;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.stone{
+  width: 56px;
+  height: 56px;
+  background: white;
+  border-radius: 50%;
+}
+
 .main {
   display: flex;
   flex: 1;
