@@ -4,22 +4,22 @@ const turns: string[] = ['', '黒の番', '白の番'];
 const Home = () => {
   const [turnColor, setTurnColor] = useState(1);
   const [board, setBoard] = useState(
-    //   [
-    //   [0, 0, 0, 0, 0, 0, 0, 0],
-    //   [0, 0, 0, 0, 0, 0, 0, 0],
-    //   [0, 0, 0, 0, 0, 0, 0, 0],
-    //   [0, 0, 0, 1, 2, 0, 0, 0],
-    //   [0, 0, 0, 2, 1, 0, 0, 0],
-    //   [0, 0, 0, 0, 0, 0, 0, 0],
-    //   [0, 0, 0, 0, 0, 0, 0, 0],
-    //   [0, 0, 0, 0, 0, 0, 0, 0],
-    // ]
+      [
+      [0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 1, 2, 0, 0, 0],
+      [0, 0, 0, 2, 1, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0, 0],
+    ]
     // [
     //   [0, 0, 0, 0, 0, 0, 0, 0],
     //   [0, 0, 0, 0, 0, 0, 0, 1],
     //   [0, 0, 0, 0, 0, 0, 2, 1],
     //   [0, 0, 0, 0, 0, 1, 2, 1],
-    //   [0, 0, 0, 0, 2, 1, 2,1],
+    //   [0, 0, 0, 0, 2, 1, 2, 1],
     //   [0, 0, 0, 1, 2, 1, 2, 1],
     //   [0, 0, 2, 1, 2, 1, 2, 1],
     //   [0, 2, 1, 2, 1, 2, 1, 2],
@@ -34,16 +34,16 @@ const Home = () => {
     //   [0, 0, 0, 0, 0, 0, 0, 0],
     //   [0, 0, 0, 0, 0, 0, 0, 0],
     // ]
-    [
-      [0, 0, 0, 0, 0, 0, 0, 0],
-      [2, 2, 1, 2, 1, 2, 1, 0],
-      [1, 1, 2, 1, 2, 1, 2, 0],
-      [2, 2, 1, 2, 1, 2, 1, 0],
-      [1, 1, 2, 1, 2, 1, 2, 0],
-      [2, 2, 1, 2, 1, 2, 1, 0],
-      [1, 1, 2, 1, 2, 1, 2, 0],
-      [2, 1, 2, 1, 2, 1, 2, 0],
-    ]
+    // [
+    //   [0, 0, 0, 0, 0, 0, 0, 0],
+    //   [2, 2, 1, 2, 1, 2, 1, 0],
+    //   [1, 1, 2, 1, 2, 1, 2, 0],
+    //   [2, 2, 1, 2, 1, 2, 1, 0],
+    //   [1, 1, 2, 1, 2, 1, 2, 0],
+    //   [2, 2, 1, 2, 1, 2, 1, 0],
+    //   [1, 1, 2, 1, 2, 1, 2, 0],
+    //   [2, 1, 2, 1, 2, 1, 2, 0],
+    // ]
     //   [
     //   [0, 0, 0, 0, 0, 0, 0, 0],
     //   [1, 1, 1, 1, 1, 1, 1, 0],
@@ -55,10 +55,11 @@ const Home = () => {
     //   [1, 1, 1, 1, 1, 1, 1, 0]
     // ]
   );
+  console.table(board)
   const onClick = (x: number, y: number) => {
     console.log(x, y);
     const newBoard = JSON.parse(JSON.stringify(board));
-
+    let wasThrough = false
     const directions = [
       [-1,1],
       [0,1],
@@ -68,32 +69,29 @@ const Home = () => {
       [0,-1],
       [-1,-1],
       [-1,0]
-  ]
-
-  for (const d of directions) {
-
-    if (board[y + d[1]] !== undefined && 
-    board[y + d[1]][x + d[0]] === 3 - turnColor) {
-      for (let n = 2; n < 8; n += 1) {
-        if (board[(y + d[1]) * n] !== undefined) {
-          if (board[(y + d[1]) * n][(x + d[0]) * n] === turnColor) {
-            newBoard[y][x] = turnColor;
-            setTurnColor(3 - turnColor);
-
-            for (let m = n - d[0]; m > 0; m -= 1) {
-              newBoard[(y + d[1]) * m][(x + d[0]) * m] = turnColor;
+    ]
+    console.log(turnColor)
+    for (const d of directions) {
+      if (board[y + d[1]] !== undefined && board[y + d[1]][x + d[0]] === 3 - turnColor) {
+        for (let n = 2; n < 8; n += 1) {
+          if (board[y + d[1] * n] !== undefined) {
+            if (board[y + d[1] * n][x + d[0]* n] === turnColor) {
+              newBoard[y][x] = turnColor;
+              for (let m = n; m >= 0 ; m -= 1) {
+                newBoard[y + d[1] * m][x + d[0] * m] = turnColor;
+              }
+              wasThrough = true
+              break;
+            } else if (board[y + d[1]* n][x + d[0] * n] === 3 - turnColor) {
+              continue;
             }
-
-            setBoard(newBoard);
-            break;
-          } else if (board[(y + d[1]) * n][(x + d[0]) * n] === 3 - turnColor) {
-            continue;
           }
         }
       }
-        break;
-      }
     }
+    if (wasThrough) setTurnColor(3 - turnColor)
+    setBoard(newBoard);
+   
     // if(
     //   board[y + 1] !== undefined &&
     //   board[y + 1][x] === 3 - turnColor
